@@ -1,5 +1,5 @@
 /**
-ºË²éÁ½±í/ÊÓÍ¼µÄ×Ö¶ÎÊÇ·ñÒ»ÖÂ
+æ ¸æŸ¥ä¸¤è¡¨/è§†å›¾çš„å­—æ®µæ˜¯å¦ä¸€è‡´
 **/
   select column_name,count(column_name) from (
          SELECT column_name FROM user_tab_columns
@@ -9,11 +9,15 @@
         WHERE table_name='VW_Z_PLAN_SUB_ORDER_DETAIL'
   )group by column_name having count(column_name)<2
   
-/**1. ²é¿´ËùÓĞ±í¿Õ¼ä´óĞ¡**/
+/**1. æŸ¥çœ‹æ‰€æœ‰è¡¨ç©ºé—´å¤§å°**/
 select tablespace_name,sum(bytes)/1024/1024 from dba_data_files group by tablespace_name; 
-/**2. Î´Ê¹ÓÃµÄ±í¿Õ¼ä´óĞ¡**/ 
+/**2. æœªä½¿ç”¨çš„è¡¨ç©ºé—´å¤§å°**/ 
 select tablespace_name,sum(bytes)/1024/1024 from dba_free_space group by tablespace_name; 
 
-/**²¹³ä»Ø´ğ£º
-²é¿´µ±Ç°ÓÃ»§Ã¿¸ö±íÕ¼ÓÃ¿Õ¼äµÄ´óĞ¡£º**/
+/**è¡¥å……å›ç­”ï¼š
+æŸ¥çœ‹å½“å‰ç”¨æˆ·æ¯ä¸ªè¡¨å ç”¨ç©ºé—´çš„å¤§å°ï¼š**/
 Select   Segment_Name,Sum(bytes)/1024/1024   From   User_Extents ue where ue.tablespace_name='GL_WMS'   Group   By   Segment_Name
+
+/**æ’åºæœ€å¤§å ç”¨ç©ºé—´è¡¨ **/
+select * from (select owner,segment_name,bytes/1024/1024 MB from dba_segments where tablespace_name='GL_WMS'  order by 3 desc) where rownum<=20;
+
